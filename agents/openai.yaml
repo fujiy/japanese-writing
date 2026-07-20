@@ -1,0 +1,4 @@
+interface:
+  display_name: "Japanese Writing"
+  short_description: "日本語の論文・技術レポート向けの文体と用語を統一する"
+  default_prompt: "Use $japanese-writing to revise this Japanese academic text."
