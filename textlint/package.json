@@ -1,0 +1,25 @@
+{
+  "name": "japanese-writing-textlint",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mechanical checks used by the japanese-writing skill",
+  "scripts": {
+    "lint:general": "node ../scripts/lint-writing.mjs --profile general",
+    "lint:technical": "node ../scripts/lint-writing.mjs --profile technical",
+    "lint:academic": "node ../scripts/lint-writing.mjs --profile academic"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@textlint-ja/textlint-rule-preset-ai-writing": "^1.7.0",
+    "textlint": "^15.8.0",
+    "textlint-filter-rule-comments": "^1.3.0",
+    "textlint-plugin-latex2e": "^1.2.1",
+    "textlint-rule-preset-ja-engineering-paper": "^1.0.4",
+    "textlint-rule-preset-ja-technical-writing": "^12.0.2",
+    "textlint-rule-preset-japanese": "^10.0.4",
+    "textlint-rule-preset-japanese-writing-local": "file:rules/preset",
+    "yaml": "^2.9.0"
+  }
+}

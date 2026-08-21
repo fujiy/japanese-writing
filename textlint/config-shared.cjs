@@ -1,0 +1,116 @@
+const path = require("node:path");
+
+const dictionaryPath = path.resolve(__dirname, "../references/discouraged-expressions.yml");
+const engineeringPrhPath = path.resolve(
+  __dirname,
+  "node_modules/textlint-rule-preset-ja-engineering-paper/src/dict/prh-rules.yml"
+);
+
+const filters = {
+  comments: true
+};
+
+const plugins = {
+  latex2e: true
+};
+
+const commonRules = {
+  "preset-japanese": {
+    "max-ten": false,
+    "no-doubled-conjunctive-particle-ga": false,
+    "no-doubled-conjunction": false,
+    "no-double-negative-ja": {
+      severity: "warning"
+    },
+    "no-doubled-joshi": false,
+    "sentence-length": false,
+    "no-dropping-the-ra": {
+      severity: "warning"
+    },
+    "no-mix-dearu-desumasu": false,
+    "no-nfd": true,
+    "no-invalid-control-character": true,
+    "no-zero-width-spaces": true,
+    "no-kangxi-radicals": true
+  },
+  "@textlint-ja/preset-ai-writing": {
+    "no-ai-list-formatting": {
+      severity: "info"
+    },
+    "no-ai-hype-expressions": {
+      severity: "warning"
+    },
+    "no-ai-emphasis-patterns": {
+      severity: "info"
+    },
+    "no-ai-colon-continuation": {
+      severity: "info"
+    },
+    "ai-tech-writing-guideline": false
+  },
+  "preset-japanese-writing-local": {
+    "discouraged-expressions": {
+      severity: "warning",
+      dictionaryPath,
+      excludeTerms: ["革命的", "ゲームチェンジャー", "可能性を解き放つ", "魔法のように", "究極"],
+      excludeTermsForExtensions: [".md", ".markdown", ".txt"]
+    },
+    "scientific-punctuation": false,
+    "sentence-per-line": false
+  }
+};
+
+const technicalPreset = {
+  "sentence-length": false,
+  "max-comma": false,
+  "max-ten": false,
+  "max-kanji-continuous-len": false,
+  "arabic-kanji-numbers": {
+    severity: "warning"
+  },
+  "no-mix-dearu-desumasu": {
+    severity: "warning",
+    preferInHeader: "",
+    preferInBody: "である",
+    preferInList: "である",
+    strict: false
+  },
+  "ja-no-mixed-period": false,
+  "no-double-negative-ja": false,
+  "no-dropping-the-ra": false,
+  "no-doubled-conjunctive-particle-ga": {
+    severity: "info"
+  },
+  "no-doubled-conjunction": {
+    severity: "info"
+  },
+  "no-doubled-joshi": false,
+  "no-nfd": false,
+  "no-invalid-control-character": false,
+  "no-zero-width-spaces": false,
+  "no-exclamation-question-mark": {
+    severity: "info"
+  },
+  "no-hankaku-kana": true,
+  "ja-no-weak-phrase": {
+    severity: "info"
+  },
+  "ja-no-successive-word": true,
+  "ja-no-abusage": {
+    severity: "warning"
+  },
+  "ja-no-redundant-expression": {
+    severity: "info"
+  },
+  "ja-unnatural-alphabet": true,
+  "no-unmatched-pair": true
+};
+
+module.exports = {
+  commonRules,
+  dictionaryPath,
+  engineeringPrhPath,
+  filters,
+  plugins,
+  technicalPreset
+};
