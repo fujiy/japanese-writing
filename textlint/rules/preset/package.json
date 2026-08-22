@@ -1,9 +1,0 @@
-{
-  "name": "textlint-rule-preset-japanese-writing-local",
-  "version": "0.1.0",
-  "private": true,
-  "main": "index.js",
-  "peerDependencies": {
-    "textlint": ">=15.1.0"
-  }
-}

@@ -1,6 +1,6 @@
 const path = require("node:path");
 
-const dictionaryPath = path.resolve(__dirname, "../references/discouraged-expressions.yml");
+const terminologyPath = path.resolve(__dirname, "../references/terminology.yml");
 const engineeringPrhPath = path.resolve(
   __dirname,
   "node_modules/textlint-rule-preset-ja-engineering-paper/src/dict/prh-rules.yml"
@@ -15,6 +15,10 @@ const plugins = {
 };
 
 const commonRules = {
+  "ja-space-between-half-and-full-width": {
+    severity: "warning",
+    space: "never"
+  },
   "preset-japanese": {
     "max-ten": false,
     "no-doubled-conjunctive-particle-ga": false,
@@ -48,13 +52,14 @@ const commonRules = {
     },
     "ai-tech-writing-guideline": false
   },
-  "preset-japanese-writing-local": {
-    "discouraged-expressions": {
-      severity: "warning",
-      dictionaryPath,
-      excludeTerms: ["革命的", "ゲームチェンジャー", "可能性を解き放つ", "魔法のように", "究極"],
-      excludeTermsForExtensions: [".md", ".markdown", ".txt"]
+  "@fujiy/preset-japanese-writing": {
+    "review-domain-terms": {
+      severity: "warning"
     },
+    "review-ai-overstatement": {
+      severity: "warning"
+    },
+    "preferred-terminology": false,
     "scientific-punctuation": false,
     "sentence-per-line": false
   }
@@ -108,9 +113,9 @@ const technicalPreset = {
 
 module.exports = {
   commonRules,
-  dictionaryPath,
   engineeringPrhPath,
   filters,
   plugins,
+  terminologyPath,
   technicalPreset
 };

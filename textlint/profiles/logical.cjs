@@ -2,8 +2,7 @@ const {
   commonRules,
   filters,
   plugins,
-  terminologyPath,
-  technicalPreset
+  terminologyPath
 } = require("../config-shared.cjs");
 
 module.exports = {
@@ -11,7 +10,6 @@ module.exports = {
   plugins,
   rules: {
     ...commonRules,
-    "preset-ja-technical-writing": technicalPreset,
     "@fujiy/preset-japanese-writing": {
       "review-domain-terms": {
         severity: "warning"
@@ -23,12 +21,8 @@ module.exports = {
         severity: "warning",
         dictionaryPath: terminologyPath
       },
-      "scientific-punctuation": {
-        severity: "warning"
-      },
-      "sentence-per-line": {
-        severity: "info"
-      }
+      "scientific-punctuation": false,
+      "sentence-per-line": false
     }
   }
 };

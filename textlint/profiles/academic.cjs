@@ -1,9 +1,9 @@
 const {
   commonRules,
-  dictionaryPath,
   engineeringPrhPath,
   filters,
   plugins,
+  terminologyPath,
   technicalPreset
 } = require("../config-shared.cjs");
 
@@ -35,12 +35,16 @@ module.exports = {
         severity: "info"
       }
     },
-    "preset-japanese-writing-local": {
-      "discouraged-expressions": {
+    "@fujiy/preset-japanese-writing": {
+      "review-domain-terms": {
+        severity: "warning"
+      },
+      "review-ai-overstatement": {
+        severity: "warning"
+      },
+      "preferred-terminology": {
         severity: "warning",
-        dictionaryPath,
-        excludeTerms: ["革命的", "ゲームチェンジャー", "可能性を解き放つ", "魔法のように", "究極"],
-        excludeTermsForExtensions: [".md", ".markdown", ".txt"]
+        dictionaryPath: terminologyPath
       },
       "scientific-punctuation": {
         severity: "warning"

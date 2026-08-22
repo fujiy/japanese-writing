@@ -1,0 +1,34 @@
+{
+  "name": "@fujiy/textlint-rule-ja-review-domain-terms",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Review Japanese domain terms that may be used outside their original context",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "dictionary.yml",
+    "README.md"
+  ],
+  "keywords": [
+    "textlint",
+    "textlintrule",
+    "japanese"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fujiy/japanese-writing.git",
+    "directory": "textlint/packages/textlint-rule-ja-review-domain-terms"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "yaml": "^2.9.0"
+  },
+  "peerDependencies": {
+    "textlint": ">=15.1.0"
+  }
+}

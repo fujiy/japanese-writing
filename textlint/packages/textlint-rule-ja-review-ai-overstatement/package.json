@@ -1,0 +1,35 @@
+{
+  "name": "@fujiy/textlint-rule-ja-review-ai-overstatement",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Review overstated expressions commonly found in AI-generated Japanese prose",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "dictionary.yml",
+    "README.md"
+  ],
+  "keywords": [
+    "textlint",
+    "textlintrule",
+    "japanese",
+    "ai-writing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fujiy/japanese-writing.git",
+    "directory": "textlint/packages/textlint-rule-ja-review-ai-overstatement"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "yaml": "^2.9.0"
+  },
+  "peerDependencies": {
+    "textlint": ">=15.1.0"
+  }
+}

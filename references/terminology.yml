@@ -1,0 +1,21 @@
+version: 1
+entries:
+  - term: minimum image convention
+    policy: keep
+    context: 分子動力学における周期境界条件の扱い方
+  - term: Lagrangian
+    policy: translate
+    preferred:
+      - ラグランジアン
+    context: 解析力学
+  - term: component
+    policy: translate
+    preferred:
+      - 成分
+      - 座標成分
+    context: ベクトル，テンソル，座標系，または基底に関する成分
+  - term: momentum map
+    policy: translate
+    preferred:
+      - 運動量写像
+    context: ハミルトン力学

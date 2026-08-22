@@ -9,7 +9,7 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const skillDir = path.resolve(scriptDir, "..");
 const textlintDir = path.join(skillDir, "textlint");
 const textlintBin = path.join(textlintDir, "node_modules", ".bin", "textlint");
-const profiles = new Set(["general", "technical", "academic"]);
+const profiles = new Set(["logical", "general", "technical", "academic"]);
 const modes = new Set(["draft", "revise", "proofread", "review"]);
 
 function fail(message, exitCode = 2) {
@@ -40,7 +40,7 @@ for (let index = 0; index < input.length; index += 1) {
   } else if (argument === "--help" || argument === "-h") {
     process.stdout.write(
       "Usage: node scripts/lint-writing.mjs " +
-        "[--profile general|technical|academic] " +
+        "[--profile logical|general|technical|academic] " +
         "[--mode draft|revise|proofread|review] [--format name] [--cache] [--fix] file...\n"
     );
     process.exit(0);

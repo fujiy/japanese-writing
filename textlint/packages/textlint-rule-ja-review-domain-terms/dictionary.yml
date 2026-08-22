@@ -1,0 +1,17 @@
+version: 1
+entries:
+  - term: 正本
+    allowed_context: 法令または文書管理上の正式な原本．
+    rewrite_hint: 「原本」「元データ」「オリジナル」など．または，「ドキュメントAは実装の正本である」ではなく「実装はドキュメントAに従う」のように対象間の関係を動詞で表す．
+  - term: 憲法
+    allowed_context: 国家の統治に関する法制度としての憲法．
+    rewrite_hint: 「原則」「基本方針」「基本ルール」など．
+  - term: 契約
+    allowed_context: 法律上の契約．
+    rewrite_hint: 「前提」「条件」「取り決め」など．
+  - term: 哲学
+    allowed_context: 哲学上の思想，方法，または議論を指す．
+    rewrite_hint: 「設計方針」「考え方」など．
+  - term: 台帳
+    allowed_context: 項目を継続的に記録し管理する帳簿または管理表を指す．
+    rewrite_hint: 「一覧」「リスト」「管理表」「データベース」など．

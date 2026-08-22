@@ -20,7 +20,11 @@ description: "Apply consistent Japanese writing conventions to conversation, log
 - 太字，絵文字，定型的な見出し，まとめ，対比構文，および箇条書きを機械的に追加しない．
 - 口語表現や崩した言い方を避けるが，会話を不必要に硬くしない．
 - 強調は，具体的な比較または根拠がある場合に限る．
-- `references/discouraged-expressions.yml` の `forbid` は使用せず，`review` は本来の意味で必要か確認する．
+- 日本語中の半角英数字および略語の前後には，半角空白を入れない．
+
+`textlint/packages/textlint-rule-ja-review-domain-terms/dictionary.yml`，
+`textlint/packages/textlint-rule-ja-review-ai-overstatement/dictionary.yml`，および
+`references/terminology.yml`はtextlint専用の辞書であり，通常会話の生成時には読み込まない．
 
 ## 文脈プロファイル
 
@@ -29,7 +33,7 @@ description: "Apply consistent Japanese writing conventions to conversation, log
 - `common`：共通規則だけを適用する．通常の会話ではこれを既定とする．
 - `logical`：数学的，論理的，または技術的な説明を会話で行う場合に，
   `references/logical-explanation.md` を読む．
-- `technical`：レポート，技術文書，解説，または保存される原稿を扱う場合に，
+- `technical`：技術的内容を含むレポート，解説，または保存される原稿を扱う場合に，
   `references/technical-document.md` を読む．
 - `academic`：論文，学位論文，投稿原稿，または数式を含む学術文書を扱う場合に，
   `references/technical-document.md` と `references/academic-writing.md` を読む．
@@ -51,15 +55,29 @@ description: "Apply consistent Japanese writing conventions to conversation, log
 
 ## textlint
 
-通常の会話および短い論理的説明ではtextlintを実行しない．
-保存されるMarkdown文書，技術文書，学術文書，または校正対象のファイルでは，完成前に利用可能なら
-次を実行する．
+短い応答を除き，論理的説明，保存される文書，および校正対象のファイルでは，完成前に利用可能なら
+textlintを実行する．
+
+論理的説明では，次のいずれかに該当する返答を検査対象とする．
+
+- 複数の前提，条件，または根拠を用いて説明する．
+- 数式の導出，論証，因果関係，または手順を説明する．
+- 複数の案を比較し，選択理由または注意点を述べる．
+- 複数の段落にわたって説明する．
+
+確認，了承，簡単な状況報告，単一の事実または定義だけを答える短い返答，ユーザーへの短い質問，
+および作業中の簡潔な進捗報告では実行しない．
+実行の要否は文字数だけで決めない．短くても論証や比較を含む場合は実行し，長くても引用や
+定型情報だけの場合は省略してよい．
 
 ```bash
-node scripts/lint-writing.mjs --profile <general|technical|academic> <file...>
+node scripts/lint-writing.mjs --profile <logical|general|technical|academic> <file...>
 ```
 
-- `technical`文書には`technical`，`academic`文書には`academic`，それ以外の保存文書には`general`を使う．
+- 会話中の論理的説明には`logical`を使う．
+- 会話の返答を検査する場合は，返答案を一時的なMarkdownファイルとして検査し，検査後に削除する．
+- 非技術的な保存文書には`general`，技術文書には`technical`，学術文書には`academic`を使う．
+- `logical`では会話の文体を維持し，だ・である調，学術用句読点，および一文一行を要求しない．
 - `proofread`では`--mode proofread`を加える．このモードでは自動修正を許可しない．
 - textlintは原則として完成前に1回だけ実行する．修正した場合だけ，必要に応じてもう1回実行する．
 - `error`は原則として修正し，`warning`と`info`は文脈を確認する．警告をゼロにすることを目的にしない．

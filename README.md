@@ -8,10 +8,10 @@
 ## 構成
 
 - `SKILL.md`には，共通規則，プロファイルとモードの選択基準，およびtextlintの実行条件がある．
-- `references/`には，論理的説明，技術文書，学術文書，校正，用語，および避ける表現の規則がある．
+- `references/`には，論理的説明，技術文書，学術文書，校正，および対訳辞書がある．
 - `scripts/lint-writing.mjs`は，指定したプロファイルでtextlintを実行する．
-- `textlint/profiles/`には，`general`，`technical`，および`academic`の設定がある．
-- `textlint/rules/preset/`には，このskill用に作成したtextlint規則がある．
+- `textlint/profiles/`には，`logical`，`general`，`technical`，および`academic`の設定がある．
+- `textlint/packages/`には，npm workspaceとして管理する自作規則とプリセットがある．
 
 ## 文脈プロファイルと作業モード
 
@@ -20,8 +20,8 @@ skillが文章を扱うときは，次の文脈プロファイルを選ぶ．
 | プロファイル | 対象 | textlint |
 |---|---|---|
 | `common` | 通常の会話を含むすべての日本語出力 | 通常は実行しない |
-| `logical` | 数学的，論理的，または技術的な会話中の説明 | 通常は実行しない |
-| `technical` | レポート，技術文書，解説，保存される原稿 | `technical`を使う |
+| `logical` | 数学的，論理的，または技術的な会話中の説明 | 短い応答を除き`logical`を使う |
+| `technical` | 技術的内容を含むレポート，解説，保存される原稿 | `technical`を使う |
 | `academic` | 論文，学位論文，投稿原稿，数式を含む学術文書 | `academic`を使う |
 
 作業モードは，文脈プロファイルとは独立して選ぶ．
@@ -41,7 +41,7 @@ skillが文章を扱うときは，次の文脈プロファイルを選ぶ．
 - npm
 - macOSまたはLinuxなどのUnix系環境
 
-textlintはskillの補助機能であり，通常会話では必要ない．
+textlintはskillの補助機能であり，短い通常会話では必要ない．
 Node.jsを実行できない環境ではtextlintを省略し，skillの規則に基づいて目視で確認する．
 skill実行中にその場でnpmパッケージをインストールすることは想定していない．
 
@@ -79,6 +79,7 @@ cd ..
 skillのルートで，対象に応じたプロファイルを指定する．
 
 ```bash
+node scripts/lint-writing.mjs --profile logical response.md
 node scripts/lint-writing.mjs --profile general notes.md
 node scripts/lint-writing.mjs --profile technical report.md
 node scripts/lint-writing.mjs --profile academic paper.tex
@@ -100,7 +101,7 @@ node scripts/lint-writing.mjs --profile academic --mode proofread paper.tex
 
 | オプション | 内容 |
 |---|---|
-| `--profile general\|technical\|academic` | textlintプロファイルを選ぶ |
+| `--profile logical\|general\|technical\|academic` | textlintプロファイルを選ぶ |
 | `--mode draft\|revise\|proofread\|review` | 作業モードを選ぶ．既定値は`revise`である |
 | `--format <name>` | textlintの出力形式を指定する．既定値は`stylish`である |
 | `--cache` | 変更されていないファイルの再検査を省略する |
@@ -122,6 +123,16 @@ node scripts/lint-writing.mjs --profile academic --mode proofread paper.tex
 
 ## textlintプロファイル
 
+### `logical`
+
+会話中の論理的説明に使う．
+複数の前提や根拠を扱う説明，数式の導出，論証，因果関係，手順，または複数案の比較を含む返答を
+検査する．
+確認，了承，簡単な状況報告，短い質問，および単一の事実だけを答える短い返答では実行しない．
+`general`の規則に加えて，既知の英語専門用語が日本語へ置き換えられているかを確認する．
+会話に対して，だ・である調，学術用句読点，または一文一行を要求しない．
+会話の返答を検査する場合は，返答案を一時的なMarkdownファイルとして検査し，検査後に削除する．
+
 ### `general`
 
 保存される一般的な日本語文書に使う．
@@ -130,7 +141,7 @@ Unicode上の異常，明確な日本語の誤り，AI生成文に多い表現�
 ### `technical`
 
 `general`の規則に加えて，だ・である調，学術用の句読点，数字表記，技術文書で避ける表現，
-一文一行などを確認する．
+一文一行，および既知の英語専門用語などを確認する．
 
 ### `academic`
 
@@ -155,6 +166,15 @@ severityは，`error`を要修正，`warning`を要確認，`info`を参考情�
 | `no-invalid-control-character` | `error` | 不要な制御文字を検出する |
 | `no-zero-width-spaces` | `error` | ゼロ幅空白を検出する |
 | `no-kangxi-radicals` | `error` | 通常の漢字に似た康煕部首を検出する |
+
+`textlint-rule-ja-space-between-half-and-full-width`から，次の規則を使う．
+
+| 規則 | severity | 内容 |
+|---|---|---|
+| `ja-space-between-half-and-full-width` | `warning` | 日本語と半角英数字の間にある半角空白を検出する．`space: never`で使用する |
+
+spacingプリセット全体は使わず，この個別規則だけを有効にしている．
+括弧，斜線，インラインコードなどの周囲へ，意図しない空白規則を追加しないためである．
 
 `@textlint-ja/textlint-rule-preset-ai-writing`から，次の規則を使う．
 
@@ -216,28 +236,58 @@ severityは，`error`を要修正，`warning`を要確認，`info`を参考情�
 
 ## このskill用に作成した規則
 
-自作規則は`textlint-rule-preset-japanese-writing-local`としてまとめている．
+<!-- textlint-disable @fujiy/japanese-writing/review-domain-terms -->
+<!-- textlint-disable @fujiy/japanese-writing/review-ai-overstatement -->
 
-### `discouraged-expressions`
+自作規則は`textlint/packages/`のnpm workspaceで管理し，
+`@fujiy/textlint-rule-preset-japanese-writing`としてまとめている．
+skillの設定はnpmパッケージ名を参照するが，開発中はworkspaceにあるローカル実装が使われる．
 
-`references/discouraged-expressions.yml`にある語を，形態素ではなく文字列として検出する．
+### `review-domain-terms`
+
+`@fujiy/textlint-rule-ja-review-domain-terms`が，専門語や制度語の文脈外使用を文字列として検出する．
+組み込み辞書は`textlint/packages/textlint-rule-ja-review-domain-terms/dictionary.yml`に置く．
+
+辞書の各項目には，次の情報を記述する．
+
+- `term`：検出する語である．
+- `allowed_context`：本来の意味で許容される文脈である．
+- `common_misuse`：特に多い乱用形態である．必要な場合だけ記述する．
+- `rewrite_hint`：語の置換ではなく，関係や操作を文単位で書き直すためのヒントである．
+
+`allowed_context`は機械的な除外条件ではない．
+この規則はすべての一致を`warning`として報告し，モデルまたは人間が実際の文脈を確認する．
+`憲法的`と`憲法`のように語が重なる場合は，長い語を優先し，同じ範囲へ複数の警告を出さない．
+
+### `review-ai-overstatement`
+
+`@fujiy/textlint-rule-ja-review-ai-overstatement`が，AI生成文で多用されやすい強調表現を
+文字列として検出する．
+組み込み辞書は`textlint/packages/textlint-rule-ja-review-ai-overstatement/dictionary.yml`に置く．
+
+辞書の各項目には`term`だけを記述する．
+この規則はすべての一致を`warning`として簡潔に報告し，代替表現の提示と自動修正は行わない．
+
+### `preferred-terminology`
+
+`references/terminology.yml`にある英語の専門用語を文字列として検出し，日本語の推奨表記候補を示す．
 辞書の`policy`には次の2種類がある．
 
-- `forbid`：原則として使わず，具体的な説明へ置き換える語である．
-- `review`：本来の意味で使われている可能性があるため，文脈を確認する語である．
+- `translate`：英語のまま残っている場合に警告し，`preferred`にある候補を示す．
+- `keep`：英語のまま使う語であり，警告しない．
 
-この規則のseverityは`warning`であり，自動修正しない．
-`憲法的`と`憲法`のように語が重なる場合は，長い語を先に照合し，同じ範囲へ複数の警告を出さない．
+この規則は`logical`，`technical`，および`academic`で`warning`として有効にし，`general`では無効にする．
+大文字と小文字を区別せず，より長い語を先に照合する．
+英数字，アンダースコア，またはハイフンが前後に続く部分一致は検出しない．
 
-Markdown，プレーンテキストでは，AI writingプリセットが検出する一部の誇張表現を自作規則から除外し，
-重複警告を抑えている．
-TeXではAI writing側が同じ表現を検出しない場合があるため，自作規則でも確認する．
+推奨表記が複数ある場合は候補をすべて示す．
+例えば`component`には，文脈に応じて`成分`と`座標成分`の候補を示すが，自動的には置き換えない．
+severityは`warning`であり，候補が1つの場合も含めて自動修正しない．
 
-この規則は語の周囲の意味を理解しない．
-たとえば`契約`が法的な意味を指すか，比喩として使われているかは判断できないため，警告後に
-モデルまたは人間が文脈を確認する必要がある．
+textlintの文字列ノードだけを対象とするため，通常のコードブロックとインラインコードは検出しない．
+引用文などの通常テキストに意図的な英語表記がある場合は警告する可能性があるため，文脈を確認する．
 
-<!-- textlint-disable japanese-writing-local/sentence-per-line -->
+<!-- textlint-disable @fujiy/japanese-writing/sentence-per-line -->
 
 ### `scientific-punctuation`
 
@@ -256,13 +306,28 @@ MarkdownおよびTeXで，1つの物理行に複数の文が書かれている�
 この規則は段落の文字列を単純化して調べるため，インラインコード内の句点も数える．
 引用や特殊な記法でも誤検知する可能性がある．
 
-<!-- textlint-enable japanese-writing-local/sentence-per-line -->
+<!-- textlint-enable @fujiy/japanese-writing/sentence-per-line -->
+
+### workspaceと公開
+
+`textlint/package.json`の`workspaces`に`packages/*`を指定している．
+各規則は独立したパッケージ名と版を持ち，プリセットは通常のnpm依存関係としてそれらを参照する．
+`npm install`を実行すると，開発中のパッケージはローカルのworkspaceへ接続される．
+
+現在は誤って公開しないよう，各自作パッケージを`private: true`としている．
+公開前にnpmの`@fujiy`スコープへの公開権限とライセンスを確定し，対象パッケージだけ
+`private`を解除する．GitHubリポジトリの作成やsubmoduleは必要ない．
+
+<!-- textlint-enable @fujiy/japanese-writing/review-ai-overstatement -->
+<!-- textlint-enable @fujiy/japanese-writing/review-domain-terms -->
 
 ## 規則と辞書の変更
 
-- 共通の避ける表現は`references/discouraged-expressions.yml`へ追加する．
+- 専門語や制度語の文脈外使用は`textlint/packages/textlint-rule-ja-review-domain-terms/dictionary.yml`へ追加する．
+- AI生成文で多用されやすい強調表現は`textlint/packages/textlint-rule-ja-review-ai-overstatement/dictionary.yml`へ追加する．
+- 英語の専門用語と推奨表記は`references/terminology.yml`へ追加する．
 - プロファイルのseverityや有効・無効は`textlint/config-shared.cjs`と`textlint/profiles/`で変更する．
-- 自作規則は`textlint/rules/preset/`で変更する．
+- 自作規則は対応する`textlint/packages/`内のパッケージで変更する．
 - npm依存関係を変更した場合は，`textlint/package-lock.json`も更新する．
 
 変更後は，正常なMarkdownとTeX，警告を期待する文章，および`error`を期待する文章で動作を確認する．
