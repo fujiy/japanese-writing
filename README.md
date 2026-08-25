@@ -332,3 +332,18 @@ MarkdownおよびTeXで，1つの物理行に複数の文が書かれている�
 
 変更後は，正常なMarkdownとTeX，警告を期待する文章，および`error`を期待する文章で動作を確認する．
 校正モードについては，`--mode proofread --fix`が終了コード2で拒否されることも確認する．
+## ChatGPT Web向けのZIP作成
+
+スキルディレクトリからアップロード用ZIPを作成するには，次を実行する．
+
+```bash
+./scripts/package-skill.sh
+```
+
+既定の出力先は`skills/japanese-writing.zip`である．別の出力先を使う場合は，第1引数に指定する．
+
+```bash
+./scripts/package-skill.sh /tmp/japanese-writing.zip
+```
+
+アーカイブには最上位の`japanese-writing/`ディレクトリを含め，`.git`および`node_modules`ディレクトリを除外する．

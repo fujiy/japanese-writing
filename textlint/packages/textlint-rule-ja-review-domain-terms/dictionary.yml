@@ -10,8 +10,47 @@ entries:
     allowed_context: 法律上の契約．
     rewrite_hint: 「前提」「条件」「取り決め」など．
   - term: 哲学
-    allowed_context: 哲学上の思想，方法，または議論を指す．
+    allowed_context: 学問としての哲学．
     rewrite_hint: 「設計方針」「考え方」など．
   - term: 台帳
-    allowed_context: 項目を継続的に記録し管理する帳簿または管理表を指す．
+    allowed_context: 項目を継続的に記録し管理する帳簿または管理表．
     rewrite_hint: 「一覧」「リスト」「管理表」「データベース」など．
+  - term: 羅針盤
+    allowed_context: 方位を測る航海用または登山用の器具．
+    rewrite_hint: 「判断基準」「方針」「指針」など．
+  - term: 地図
+    allowed_context: 地理的な位置，経路，または空間的関係を表した図．
+    rewrite_hint: 「全体像」「関係図」「整理」など．
+  - term: 土台
+    allowed_context: 建築物や構造物を支える基礎部分．
+    rewrite_hint: 「前提」「基礎条件」「基盤となる要素」など．
+  - term: 柱
+    allowed_context: 建築物を支える部材，または物理的な柱を指す．
+    rewrite_hint: 「主要な項目」「方針」「要素」など．
+  - term: 礎
+    allowed_context: 建築物の基礎に用いる石．
+    rewrite_hint: 「基礎」「前提」「条件」など．
+  - term: エンジン
+    allowed_context: 燃焼，電力などで動力を生む機械装置．
+    rewrite_hint: 「要因」「推進力」「原動力」など．
+  - term: 触媒
+    allowed_context: 化学反応の速度を変える物質．
+    rewrite_hint: 「契機」「要因」「促す働き」など．
+  - term: 処方箋
+    allowed_context: 医師，歯科医師などが薬剤師に薬の調製を指示する文書．
+    rewrite_hint: 「対応策」「解決策」「方針」など．
+  - term: 病理
+    allowed_context: 病気の原因や経過を医学的に扱う分野，または病的変化．
+    rewrite_hint: 「原因」「構造」「経緯」など．
+  - term: 交通整理
+    allowed_context: 道路交通を安全かつ円滑にするために人や車両を誘導する行為．
+    rewrite_hint: 「論点を整理する」「関係を整理する」など．
+  - term: 外科手術
+    allowed_context: 医療上の目的で身体を切開または操作する処置．
+    rewrite_hint: 「大きく変更する」「構造を変更する」など．
+  - term: レバー
+    allowed_context: 支点を中心に回転して力を伝えるてこや操作部品．
+    rewrite_hint: 「操作可能な要因」「施策」「手段」など．
+  - term: レンズ
+    allowed_context: 光を屈折させて結像させる光学部品．
+    rewrite_hint: 「視点」「観点」「分析方法」など．
