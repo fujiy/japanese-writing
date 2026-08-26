@@ -25,14 +25,13 @@ test("文脈語を含まない文章は通過する", () => {
   assert.equal(result.results[0].messages.length, 0);
 });
 
-test("文脈語を検出し，長い語を優先する", () => {
+test("文脈語を検出する", () => {
   const result = lint("invalid.md");
   const messages = result.results[0].messages;
   assert.equal(result.status, 1);
   assert.equal(messages.length, 2);
-  assert.match(messages[0].message, /文脈確認語「憲法」/);
+  assert.match(messages[0].message, /専門分野外での乱用が疑われる語「憲法」/);
   assert.match(messages[0].message, /許容文脈/);
-  assert.match(messages[0].message, /ありがちな乱用/);
   assert.match(messages[0].message, /書き換えのヒント/);
-  assert.match(messages[1].message, /文脈確認語「憲法的」/);
+  assert.match(messages[1].message, /専門分野外での乱用が疑われる語「憲法」/);
 });

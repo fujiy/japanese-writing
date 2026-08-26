@@ -9,8 +9,7 @@
 
 - `SKILL.md`には，共通規則，プロファイルとモードの選択基準，およびtextlintの実行条件がある．
 - `references/`には，論理的説明，技術文書，学術文書，校正，および対訳辞書がある．
-- `scripts/lint-writing.mjs`は，指定したプロファイルでtextlintを実行する．
-- `textlint/profiles/`には，`logical`，`general`，`technical`，および`academic`の設定がある．
+- `textlint/profiles/`には，会話用の`conversation`と文書用の`document`の設定がある．
 - `textlint/packages/`には，npm workspaceとして管理する自作規則とプリセットがある．
 
 ## 文脈プロファイルと作業モード
@@ -20,9 +19,9 @@ skillが文章を扱うときは，次の文脈プロファイルを選ぶ．
 | プロファイル | 対象 | textlint |
 |---|---|---|
 | `common` | 通常の会話を含むすべての日本語出力 | 通常は実行しない |
-| `logical` | 数学的，論理的，または技術的な会話中の説明 | 短い応答を除き`logical`を使う |
-| `technical` | 技術的内容を含むレポート，解説，保存される原稿 | `technical`を使う |
-| `academic` | 論文，学位論文，投稿原稿，数式を含む学術文書 | `academic`を使う |
+| `logical` | 数学的，論理的，または技術的な会話中の説明 | 短い応答を除き`conversation`を使う |
+| `technical` | 技術的内容を含むレポート，解説，保存される原稿 | `document`を使う |
+| `academic` | 論文，学位論文，投稿原稿，数式を含む学術文書 | `document`を使う |
 
 作業モードは，文脈プロファイルとは独立して選ぶ．
 
@@ -47,12 +46,8 @@ skill実行中にその場でnpmパッケージをインストールすること
 
 ### skillの配置
 
-Codexから自動的に検出する場合は，skillのディレクトリを次の位置に置くか，この位置から
-リポジトリへシンボリックリンクを作る．
-
-```text
-~/.codex/skills/japanese-writing/
-```
+skillをCodexが検出する場所へ配置する方法は，利用するCodex環境の公式ドキュメントに従う．
+以下では，skillのルートディレクトリを`<skill-dir>`と表す．
 
 ### 依存関係のインストール
 
@@ -74,78 +69,61 @@ npm ls --depth=0
 cd ..
 ```
 
+### CodexへのMCP登録
+
+Codexが読み込む`config.toml`へ，次の2つのSTDIOサーバーを登録する．
+`<skill-dir>`はskillのルートディレクトリの絶対パスに置き換える．
+
+```toml
+[mcp_servers.textlint_conversation]
+command = "node"
+args = ["<skill-dir>/textlint/node_modules/textlint/bin/textlint.js", "--mcp", "--config", "<skill-dir>/textlint/profiles/conversation.cjs", "--rules-base-directory", "<skill-dir>/textlint/node_modules"]
+
+[mcp_servers.textlint_document]
+command = "node"
+args = ["<skill-dir>/textlint/node_modules/textlint/bin/textlint.js", "--mcp", "--config", "<skill-dir>/textlint/profiles/document.cjs", "--rules-base-directory", "<skill-dir>/textlint/node_modules"]
+```
+
+STDIOサーバーはCodexが子プロセスとして起動するが，その寿命は利用するCodexクライアントの実装に
+依存する．OS全体で常駐するサーバーではない．起動中のサーバーは設定とruleを自動再読込しないため，
+登録内容またはruleを変更した後は，ChatGPTデスクトップアプリまたは利用中のCodexクライアントを
+再起動する．CLIでは，新しいCodexプロセスを起動する．
+
 ## textlintの実行方法
 
-skillのルートで，対象に応じたプロファイルを指定する．
+標準では，textlint 15.8.0以降に内蔵されているSTDIO MCPサーバーを使う．
+`textlint_conversation`は`conversation.cjs`を，`textlint_document`は`document.cjs`を読み込む．
+各サーバーは`lintText`，`lintFile`，`getLintFixedTextContent`，および
+`getLintFixedFileContent`を公開する．fix toolは修正後の内容を返すだけで，原ファイルを直接変更しない．
+
+MCPサーバーが利用できない場合は，依存関係が導入済みならCLIを直接実行できる．
 
 ```bash
-node scripts/lint-writing.mjs --profile logical response.md
-node scripts/lint-writing.mjs --profile general notes.md
-node scripts/lint-writing.mjs --profile technical report.md
-node scripts/lint-writing.mjs --profile academic paper.tex
+cd textlint
+npm run lint:conversation -- response.md
+npm run lint:document -- report.md paper.tex
 ```
 
-複数のファイルを同時に指定してもよい．
-
-```bash
-node scripts/lint-writing.mjs --profile academic introduction.tex method.tex
-```
-
-校正では`proofread`モードを指定する．
-
-```bash
-node scripts/lint-writing.mjs --profile academic --mode proofread paper.tex
-```
-
-利用可能なオプションは次のとおりである．
-
-| オプション | 内容 |
-|---|---|
-| `--profile logical\|general\|technical\|academic` | textlintプロファイルを選ぶ |
-| `--mode draft\|revise\|proofread\|review` | 作業モードを選ぶ．既定値は`revise`である |
-| `--format <name>` | textlintの出力形式を指定する．既定値は`stylish`である |
-| `--cache` | 変更されていないファイルの再検査を省略する |
-| `--fix` | 修正可能な規則による自動修正を行う |
-
-`proofread`と`review`では，原文を機械的に変更しないため，`--fix`を指定すると終了コード2で拒否する．
-それ以外のモードでも，`--fix`はユーザーが自動修正を求めた場合に限って使う．
-
-終了コードの扱いは次のとおりである．
-
-| 終了コード | 意味 |
-|---|---|
-| `0` | `error`がない．`warning`または`info`が含まれる場合がある |
-| `1` | textlintが`error`を検出した |
-| `2` | 引数，依存関係，または禁止された`--fix`など，実行条件に問題がある |
-
-`warning`と`info`は修正命令ではない．
-原文の意味と文脈を確認し，必要なものだけを反映する．
+CLIの`--fix`も利用できる．実ファイルへの変更は，依頼された作業モードと変更範囲に従う．
+`warning`と`info`は修正命令ではないため，原文の意味と文脈を確認し，必要なものだけを反映する．
 
 ## textlintプロファイル
 
-### `logical`
+### `conversation`
 
 会話中の論理的説明に使う．
 複数の前提や根拠を扱う説明，数式の導出，論証，因果関係，手順，または複数案の比較を含む返答を
 検査する．
 確認，了承，簡単な状況報告，短い質問，および単一の事実だけを答える短い返答では実行しない．
-`general`の規則に加えて，既知の英語専門用語が日本語へ置き換えられているかを確認する．
+共通規則に加えて，既知の英語専門用語が日本語へ置き換えられているかを確認する．
 会話に対して，だ・である調，学術用句読点，または一文一行を要求しない．
-会話の返答を検査する場合は，返答案を一時的なMarkdownファイルとして検査し，検査後に削除する．
 
-### `general`
+### `document`
 
-保存される一般的な日本語文書に使う．
-Unicode上の異常，明確な日本語の誤り，AI生成文に多い表現，およびこのskill固有の避ける表現を確認する．
-
-### `technical`
-
-`general`の規則に加えて，だ・である調，学術用の句読点，数字表記，技術文書で避ける表現，
-一文一行，および既知の英語専門用語などを確認する．
-
-### `academic`
-
-`technical`の規則に加えて，形式名詞，副詞，補助動詞，同義語，工学論文向け表記，およびSI単位を確認する．
+保存される一般文書，技術文書，および学術文書に使う．
+共通規則と`conversation`の用語検査に加えて，だ・である調，学術用の句読点，数字表記，
+技術文書で避ける表現，一文一行，形式名詞，副詞，補助動詞，同義語，工学論文向け表記，
+およびSI単位を確認する．
 
 Markdown，プレーンテキスト，およびTeXを扱える．
 TeXの解析には`textlint-plugin-latex2e`を使う．
@@ -154,7 +132,7 @@ TeXの解析には`textlint-plugin-latex2e`を使う．
 
 severityは，`error`を要修正，`warning`を要確認，`info`を参考情報として設定している．
 
-### 全プロファイル
+### 両プロファイル
 
 `textlint-rule-preset-japanese`から，次の規則を使う．
 
@@ -192,7 +170,7 @@ spacingプリセット全体は使わず，この個別規則だけを有効に�
 意図した用例を局所的に除外する必要がある場合は，textlintの無効化コメントを使えるが，
 除外理由を確認した上で必要な範囲だけに使う．
 
-### `technical`と`academic`
+### `document`
 
 `textlint-rule-preset-ja-technical-writing`から，次の規則を追加する．
 
@@ -219,7 +197,7 @@ spacingプリセット全体は使わず，この個別規則だけを有効に�
 - `no-doubled-joshi`：正しい文でも検出される場合があるため，初期設定では無効にしている．
 - `ja-no-mixed-period`：このskill固有の`scientific-punctuation`で「，」「．」を確認するため無効にしている．
 
-### `academic`
+### `document`の工学論文向け規則
 
 `textlint-rule-preset-ja-engineering-paper`から，次の規則を追加する．
 
@@ -276,7 +254,7 @@ skillの設定はnpmパッケージ名を参照するが，開発中はworkspace
 - `translate`：英語のまま残っている場合に警告し，`preferred`にある候補を示す．
 - `keep`：英語のまま使う語であり，警告しない．
 
-この規則は`logical`，`technical`，および`academic`で`warning`として有効にし，`general`では無効にする．
+この規則は`conversation`と`document`で`warning`として有効にする．
 大文字と小文字を区別せず，より長い語を先に照合する．
 英数字，アンダースコア，またはハイフンが前後に続く部分一致は検出しない．
 
@@ -291,7 +269,7 @@ textlintの文字列ノードだけを対象とするため，通常のコード
 
 ### `scientific-punctuation`
 
-技術文書と学術文書で，日本語の句読点`、`と`。`を検出し，それぞれ`，`と`．`を使うよう警告する．
+`document`で，日本語の句読点`、`と`。`を検出し，それぞれ`，`と`．`を使うよう警告する．
 severityは`warning`であり，自動修正しない．
 
 textlintの構文木にある文章ノードを対象とするため，通常のコードブロック自体は検査対象にならない．
@@ -326,12 +304,12 @@ MarkdownおよびTeXで，1つの物理行に複数の文が書かれている�
 - 専門語や制度語の文脈外使用は`textlint/packages/textlint-rule-ja-review-domain-terms/dictionary.yml`へ追加する．
 - AI生成文で多用されやすい強調表現は`textlint/packages/textlint-rule-ja-review-ai-overstatement/dictionary.yml`へ追加する．
 - 英語の専門用語と推奨表記は`references/terminology.yml`へ追加する．
-- プロファイルのseverityや有効・無効は`textlint/config-shared.cjs`と`textlint/profiles/`で変更する．
+- プロファイルのseverityや有効・無効は`textlint/config-shared.cjs`と
+  `textlint/profiles/conversation.cjs`または`textlint/profiles/document.cjs`で変更する．
 - 自作規則は対応する`textlint/packages/`内のパッケージで変更する．
 - npm依存関係を変更した場合は，`textlint/package-lock.json`も更新する．
 
 変更後は，正常なMarkdownとTeX，警告を期待する文章，および`error`を期待する文章で動作を確認する．
-校正モードについては，`--mode proofread --fix`が終了コード2で拒否されることも確認する．
 ## ChatGPT Web向けのZIP作成
 
 スキルディレクトリからアップロード用ZIPを作成するには，次を実行する．

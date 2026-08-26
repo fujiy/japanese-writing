@@ -7,10 +7,10 @@
     "packages/*"
   ],
   "scripts": {
-    "lint:logical": "node ../scripts/lint-writing.mjs --profile logical",
-    "lint:general": "node ../scripts/lint-writing.mjs --profile general",
-    "lint:technical": "node ../scripts/lint-writing.mjs --profile technical",
-    "lint:academic": "node ../scripts/lint-writing.mjs --profile academic"
+    "lint:conversation": "textlint --config profiles/conversation.cjs",
+    "lint:document": "textlint --config profiles/document.cjs",
+    "mcp:conversation": "textlint --mcp --config profiles/conversation.cjs --rules-base-directory node_modules",
+    "mcp:document": "textlint --mcp --config profiles/document.cjs --rules-base-directory node_modules"
   },
   "engines": {
     "node": ">=20"

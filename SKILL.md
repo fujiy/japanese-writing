@@ -55,8 +55,8 @@ description: "Apply consistent Japanese writing conventions to conversation, log
 
 ## textlint
 
-短い応答を除き，論理的説明，保存される文書，および校正対象のファイルでは，完成前に利用可能なら
-textlintを実行する．
+短い応答を除き，論理的説明，保存される文書，および校正対象のファイルでは，完成前にtextlintを
+実行する．標準の実行方法は，textlint内蔵MCPサーバーである．
 
 論理的説明では，次のいずれかに該当する返答を検査対象とする．
 
@@ -70,20 +70,26 @@ textlintを実行する．
 実行の要否は文字数だけで決めない．短くても論証や比較を含む場合は実行し，長くても引用や
 定型情報だけの場合は省略してよい．
 
-```bash
-node scripts/lint-writing.mjs --profile <logical|general|technical|academic> <file...>
-```
-
-- 会話中の論理的説明には`logical`を使う．
-- 会話の返答を検査する場合は，返答案を一時的なMarkdownファイルとして検査し，検査後に削除する．
-- 非技術的な保存文書には`general`，技術文書には`technical`，学術文書には`academic`を使う．
-- `logical`では会話の文体を維持し，だ・である調，学術用句読点，および一文一行を要求しない．
-- `proofread`では`--mode proofread`を加える．このモードでは自動修正を許可しない．
+- 会話中の論理的説明には`textlint_conversation`の`lintText`を使う．
+- 保存される一般文書，技術文書，学術文書，および校正対象のファイルには，
+  `textlint_document`の`lintText`または`lintFile`を使う．
+- `conversation`では会話の文体を維持し，だ・である調，学術用句読点，および一文一行を要求しない．
+- MCPのfix toolは利用してよい．fix toolは修正後の内容を返すだけで，原ファイルを直接変更しない．
+  返された内容をファイルへ反映するかは，依頼された作業モードと変更範囲に従って判断する．
 - textlintは原則として完成前に1回だけ実行する．修正した場合だけ，必要に応じてもう1回実行する．
 - `error`は原則として修正し，`warning`と`info`は文脈を確認する．警告をゼロにすることを目的にしない．
-- `--fix`はユーザーが自動修正を求め，かつ原文保持の制約がない場合に限って明示的に使う．
-- Node.jsまたは依存関係が利用できない環境では実行せず，同じ規則を目視で確認する．実行のために
-  その場で依存関係をインストールしない．
+
+MCPサーバーが利用できない場合は，Node.jsとskill内の依存関係が利用可能なら，textlint CLIを直接
+実行してよい．`<skill-dir>`はこの`SKILL.md`があるディレクトリへ置き換える．
+
+```bash
+node <skill-dir>/textlint/node_modules/textlint/bin/textlint.js \
+  --config <skill-dir>/textlint/profiles/<conversation|document>.cjs <file...>
+```
+
+- 会話の返答案をCLIで検査する場合は，一時的なMarkdownファイルへ保存し，検査後に削除する．
+- Node.jsまたは依存関係が利用できない場合は，textlintを実行せず，同じ規則を目視で確認する．
+- textlintを実行するために，その場で依存関係をインストールしない．
 
 ## 完成前の確認
 
