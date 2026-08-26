@@ -1,64 +1,66 @@
 ---
 name: japanese-writing
-description: "Apply consistent Japanese writing conventions to conversation, logical explanations, technical documents, reports, theses, and papers. Use when Codex drafts, revises, proofreads, or reviews Japanese prose."
+description: "Apply consistent Japanese writing conventions to conversation, general-audience articles, technical documents, reports, theses, and papers. Use when Codex drafts, revises, proofreads, or reviews Japanese prose."
 ---
 
 # Japanese Writing
 
 日本語の文章を作成，修正，校正，またはレビューするときに使用する．
-文脈プロファイルと作業モードを別々に選び，必要な規則だけを適用する．
+文章レベルと作業モードを別々に選び，必要な規則だけを適用する．
 
 ## 共通規則
 
 次の規則は，通常の会話を含むすべての日本語出力に適用する．
 
-- 会話はです・ます調とする．文書は，ユーザーまたはテンプレートの指定がなければ，だ・である調とする．
 - ユーザー，投稿先，所属機関，または指定テンプレートの規則を優先する．
 - 不要な比喩，暗喩，擬人法，誇張表現，および印象を強めるだけの形容詞を避ける．
-- 他分野の術語を，単なる方針，重要性，関係性などの比喩として安易に転用しない．
+- 他分野の術語を，単なる方針，重要性，関係性などの比喩として転用しない．
 - 細部の説明中に，大局的な意義，主観的評価，または一般化を突然挿入しない．
 - 太字，絵文字，定型的な見出し，まとめ，対比構文，および箇条書きを機械的に追加しない．
-- 口語表現や崩した言い方を避けるが，会話を不必要に硬くしない．
+- 意味が曖昧になる口語表現や崩した言い方を避けるが，会話や一般向け文章を不必要に硬くしない．
 - 強調は，具体的な比較または根拠がある場合に限る．
 - 日本語中の半角英数字および略語の前後には，半角空白を入れない．
+- 見出しは文章にしない．体言止めは可．
+- 仮定，条件設定，定義，およびそれらから導かれる事実を区別する．
+- 論理関係を接続表現だけに依存させず，何が何から導かれるかを明示する．
+- 厳密に述べられる内容を，不要に曖昧な表現へ置き換えない．
+- 近似を示す表現は，数値的な誤差または近似を表す場合に使う．
+- 使用する記号は原則として使用前に定義する．
+- 数式の変形では，省略によって論理が不明になる中間段階を残す．
+- 文体上の修正と内容上の修正を区別し，引用，数式，記号，および既存の論理関係を不用意に変更しない．
 
-`textlint/packages/textlint-rule-ja-review-domain-terms/dictionary.yml`，
-`textlint/packages/textlint-rule-ja-review-ai-overstatement/dictionary.yml`，および
-`references/terminology.yml`はtextlint専用の辞書であり，通常会話の生成時には読み込まない．
+## 文章レベル
 
-## 文脈プロファイル
+文章の用途と求められる形式に応じて，次のいずれかを選ぶ．
 
-文章の用途に応じて，次のプロファイルを選ぶ．必要なら複数を組み合わせる．
+- `conversation`：会話，通常の説明，会話調で書く記事やブログ，および簡単なノートに使う．
+  [references/conversation.md](references/conversation.md)を読む．
+- `document`：レポート，技術文書，仕様書，論文，学位論文，および投稿原稿に使う．
+  [references/document.md](references/document.md)を読む．
 
-- `common`：共通規則だけを適用する．通常の会話ではこれを既定とする．
-- `logical`：数学的，論理的，または技術的な説明を会話で行う場合に，
-  `references/logical-explanation.md` を読む．
-- `technical`：技術的内容を含むレポート，解説，または保存される原稿を扱う場合に，
-  `references/technical-document.md` を読む．
-- `academic`：論文，学位論文，投稿原稿，または数式を含む学術文書を扱う場合に，
-  `references/technical-document.md` と `references/academic-writing.md` を読む．
-
-会話で論理的な説明をする場合は，通常 `common + logical` とし，文書用の句読点や改行規則を
-自動的には加えない．
+指定がなければ，通常の応答と一般向けの記事には`conversation`を使い，正式な文書には`document`を
+使う．
+ブログなどの保存される文章でも，一般向けまたは会話調であれば`conversation`を選んでよい．
 
 ## 作業モード
 
-文脈プロファイルとは別に，依頼内容から作業モードを選ぶ．
+文章レベルとは別に，依頼内容から作業モードを選ぶ．
 
 - `draft`：新規作成であり，構成から設計してよい．
 - `revise`：意味を保ちながら，構成，段落，文，および用語を改善してよい．
 - `proofread`：原文をできるだけ保ち，必要な修正だけを行う．
 - `review`：原文を変更せず，問題点と必要に応じて修正案を示す．
 
-`proofread`または`review`では，`references/proofreading.md` を読む．
+`proofread`または`review`では，[references/proofreading.md](references/proofreading.md)を読む．
 ユーザーが「校正」「誤字脱字」「表記確認」などを求めた場合は，指定がなければ`proofread`とする．
 
 ## textlint
 
-短い応答を除き，論理的説明，保存される文書，および校正対象のファイルでは，完成前にtextlintを
-実行する．標準の実行方法は，textlint内蔵MCPサーバーである．
+短い応答を除き，`conversation`のまとまった文章と`document`の文章では，完成前にtextlintを実行する．
+校正対象には，選択した文章レベルに対応するtextlintを使う．
+標準の実行方法は，textlint内蔵MCPサーバーである．
 
-論理的説明では，次のいずれかに該当する返答を検査対象とする．
+`conversation`では，次のいずれかに該当する文章を検査対象とする．
 
 - 複数の前提，条件，または根拠を用いて説明する．
 - 数式の導出，論証，因果関係，または手順を説明する．
@@ -67,20 +69,24 @@ description: "Apply consistent Japanese writing conventions to conversation, log
 
 確認，了承，簡単な状況報告，単一の事実または定義だけを答える短い返答，ユーザーへの短い質問，
 および作業中の簡潔な進捗報告では実行しない．
-実行の要否は文字数だけで決めない．短くても論証や比較を含む場合は実行し，長くても引用や
+実行の要否は文字数だけで決めない．
+短くても論証や比較を含む場合は実行し，長くても引用や
 定型情報だけの場合は省略してよい．
 
-- 会話中の論理的説明には`textlint_conversation`の`lintText`を使う．
-- 保存される一般文書，技術文書，学術文書，および校正対象のファイルには，
-  `textlint_document`の`lintText`または`lintFile`を使う．
+- `conversation`には`textlint_conversation`の`lintText`または`lintFile`を使う．
+- `document`には`textlint_document`の`lintText`または`lintFile`を使う．
 - `conversation`では会話の文体を維持し，だ・である調，学術用句読点，および一文一行を要求しない．
-- MCPのfix toolは利用してよい．fix toolは修正後の内容を返すだけで，原ファイルを直接変更しない．
+- MCPのfix toolは利用してよい．
+  fix toolは修正後の内容を返すだけで，原ファイルを直接変更しない．
   返された内容をファイルへ反映するかは，依頼された作業モードと変更範囲に従って判断する．
-- textlintは原則として完成前に1回だけ実行する．修正した場合だけ，必要に応じてもう1回実行する．
-- `error`は原則として修正し，`warning`と`info`は文脈を確認する．警告をゼロにすることを目的にしない．
+- textlintは原則として完成前に1回だけ実行する．
+  修正した場合だけ，必要に応じてもう1回実行する．
+- `error`は原則として修正し，`warning`と`info`は文脈を確認する．
+  警告をゼロにすることを目的にしない．
 
 MCPサーバーが利用できない場合は，Node.jsとskill内の依存関係が利用可能なら，textlint CLIを直接
-実行してよい．`<skill-dir>`はこの`SKILL.md`があるディレクトリへ置き換える．
+実行してよい．
+`<skill-dir>`はこの`SKILL.md`があるディレクトリへ置き換える．
 
 ```bash
 node <skill-dir>/textlint/node_modules/textlint/bin/textlint.js \
@@ -93,7 +99,8 @@ node <skill-dir>/textlint/node_modules/textlint/bin/textlint.js \
 
 ## 完成前の確認
 
-- 適用した文脈プロファイルと作業モードに反していないか確認する．
-- 文体上の修正と内容上の修正を区別する．不明点や矛盾を推測で補わない．
+- 適用した文章レベルと作業モードに反していないか確認する．
+- 文体上の修正と内容上の修正を区別する．
+  不明点や矛盾を推測で補わない．
 - 文体，句読点，用語，数式，記号，引用，および段落構成を全文で確認する．
 - 推敲または校正では，原文の意味と論理関係が保たれていることを確認する．
