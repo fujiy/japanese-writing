@@ -1,0 +1,42 @@
+textlint/packages/textlint-rule-preset-japanese-writing/package.json
+  s_591f5e9bc428b6::t_c8b525a8d94da0 12
+README.md
+  s_591f5e9bc428b6::t_c8b525a8d94da0 286-292,297
+textlint/profiles/conversation.cjs
+  s_591f5e9bc428b6::t_c8b525a8d94da0 4,12-15
+textlint/profiles/document.cjs
+  s_591f5e9bc428b6::t_c8b525a8d94da0 37-40
+SKILL.md
+  h_cf2709b4c84c54 17-19,22
+references/conversation.md
+  h_cf2709b4c84c54 5-10,16
+references/document.md
+  h_cf2709b4c84c54 36
+textlint/package.json
+  s_591f5e9bc428b6::t_c8b525a8d94da0 16,24
+textlint/package-lock.json
+  s_591f5e9bc428b6::t_61570559296cb4 20,26,4302-4317,5438
+textlint/packages/textlint-rule-ja-review-domain-terms/dictionary.yml
+  h_cf2709b4c84c54 57-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "28e90c1e8567a1789ca592c2134d4a9f5c6f9ace",
+  "prompts": {},
+  "humans": {
+    "h_cf2709b4c84c54": {
+      "author": "Yuki Fujihara <mail@fujiy.dev>"
+    }
+  },
+  "sessions": {
+    "s_591f5e9bc428b6": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a09e88-7731-7a53-8f2d-14be95994290",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "Yuki Fujihara <mail@fujiy.dev>"
+    }
+  }
+}
