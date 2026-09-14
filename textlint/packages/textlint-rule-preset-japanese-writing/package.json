@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "@fujiy/textlint-rule-ja-review-domain-terms": "^0.1.0",
-    "@fujiy/textlint-rule-ja-review-ai-overstatement": "^0.1.0",
-    "yaml": "^2.9.0"
+    "@fujiy/textlint-rule-ja-review-ai-overstatement": "^0.1.0"
   },
   "peerDependencies": {
     "textlint": ">=15.1.0"

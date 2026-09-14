@@ -1,6 +1,5 @@
 const path = require("node:path");
 
-const terminologyPath = path.resolve(__dirname, "../references/terminology.yml");
 const engineeringPrhPath = path.resolve(
   __dirname,
   "node_modules/textlint-rule-preset-ja-engineering-paper/src/dict/prh-rules.yml"
@@ -59,7 +58,6 @@ const commonRules = {
     "review-ai-overstatement": {
       severity: "warning"
     },
-    "preferred-terminology": false,
     "scientific-punctuation": false,
     "sentence-per-line": false
   }
@@ -116,6 +114,5 @@ module.exports = {
   engineeringPrhPath,
   filters,
   plugins,
-  terminologyPath,
   technicalPreset
 };

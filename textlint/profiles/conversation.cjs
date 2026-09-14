@@ -1,8 +1,7 @@
 const {
   commonRules,
   filters,
-  plugins,
-  terminologyPath
+  plugins
 } = require("../config-shared.cjs");
 
 module.exports = {
@@ -10,16 +9,16 @@ module.exports = {
   plugins,
   rules: {
     ...commonRules,
+    "ja-untranslated-english": {
+      severity: "warning",
+      profile: "general"
+    },
     "@fujiy/preset-japanese-writing": {
       "review-domain-terms": {
         severity: "warning"
       },
       "review-ai-overstatement": {
         severity: "warning"
-      },
-      "preferred-terminology": {
-        severity: "warning",
-        dictionaryPath: terminologyPath
       },
       "scientific-punctuation": false,
       "sentence-per-line": false

@@ -249,25 +249,6 @@ skillの設定はnpmパッケージ名を参照するが，開発中はworkspace
 辞書の各項目には`term`だけを記述する．
 この規則はすべての一致を`warning`として簡潔に報告し，代替表現の提示と自動修正は行わない．
 
-### `preferred-terminology`
-
-`references/terminology.yml`にある英語の専門用語を文字列として検出し，日本語の推奨表記候補を示す．
-辞書の`policy`には次の2種類がある．
-
-- `translate`：英語のまま残っている場合に警告し，`preferred`にある候補を示す．
-- `keep`：英語のまま使う語であり，警告しない．
-
-この規則は`conversation`と`document`で`warning`として有効にする．
-大文字と小文字を区別せず，より長い語を先に照合する．
-英数字，アンダースコア，またはハイフンが前後に続く部分一致は検出しない．
-
-推奨表記が複数ある場合は候補をすべて示す．
-例えば`component`には，文脈に応じて`成分`と`座標成分`の候補を示すが，自動的には置き換えない．
-severityは`warning`であり，候補が1つの場合も含めて自動修正しない．
-
-textlintの文字列ノードだけを対象とするため，通常のコードブロックとインラインコードは検出しない．
-引用文などの通常テキストに意図的な英語表記がある場合は警告する可能性があるため，文脈を確認する．
-
 <!-- textlint-disable @fujiy/japanese-writing/sentence-per-line -->
 
 ### `scientific-punctuation`
@@ -302,11 +283,18 @@ MarkdownおよびTeXで，1つの物理行に複数の文が書かれている�
 <!-- textlint-enable @fujiy/japanese-writing/review-ai-overstatement -->
 <!-- textlint-enable @fujiy/japanese-writing/review-domain-terms -->
 
+## 英語表記の検査
+
+`textlint-rule-ja-untranslated-english`を，`conversation`では`general`，`document`では`academic`プロファイルで`warning`として有効にする．
+この規則は対訳コーパスの統計に基づき，日本語の文章で英語表記が維持される例が少ない語句を警告する．訳語の提案と自動修正は行わない．
+
+コード，URL，数式，識別子，参考文献節，および日本語訳に原語を併記した箇所は検査しない．固有名詞や専門用語など，英語表記を意図する語句はプロファイルの`allow`で許可する．
+
 ## 規則と辞書の変更
 
 - 専門語や制度語の文脈外使用は`textlint/packages/textlint-rule-ja-review-domain-terms/dictionary.yml`へ追加する．
 - AI生成文で多用されやすい強調表現は`textlint/packages/textlint-rule-ja-review-ai-overstatement/dictionary.yml`へ追加する．
-- 英語の専門用語と推奨表記は`references/terminology.yml`へ追加する．
+- 英語表記の警告除外は，該当プロファイルの`ja-untranslated-english`にある`allow`へ追加する．
 - プロファイルのseverityや有効・無効は`textlint/config-shared.cjs`と
   `textlint/profiles/conversation.cjs`または`textlint/profiles/document.cjs`で変更する．
 - 自作規則は対応する`textlint/packages/`内のパッケージで変更する．

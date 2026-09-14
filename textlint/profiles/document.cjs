@@ -3,7 +3,6 @@ const {
   engineeringPrhPath,
   filters,
   plugins,
-  terminologyPath,
   technicalPreset
 } = require("../config-shared.cjs");
 
@@ -35,16 +34,16 @@ module.exports = {
         severity: "info"
       }
     },
+    "ja-untranslated-english": {
+      severity: "warning",
+      profile: "academic"
+    },
     "@fujiy/preset-japanese-writing": {
       "review-domain-terms": {
         severity: "warning"
       },
       "review-ai-overstatement": {
         severity: "warning"
-      },
-      "preferred-terminology": {
-        severity: "warning",
-        dictionaryPath: terminologyPath
       },
       "scientific-punctuation": {
         severity: "warning"

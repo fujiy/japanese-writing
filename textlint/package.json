@@ -13,7 +13,7 @@
     "mcp:document": "textlint --mcp --config profiles/document.cjs --rules-base-directory node_modules"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "devDependencies": {
     "@fujiy/textlint-rule-preset-japanese-writing": "0.1.0",
@@ -21,6 +21,7 @@
     "textlint": "^15.8.0",
     "textlint-filter-rule-comments": "^1.3.0",
     "textlint-plugin-latex2e": "^1.2.1",
+    "textlint-rule-ja-untranslated-english": "^0.1.0",
     "textlint-rule-ja-space-between-half-and-full-width": "^3.0.3",
     "textlint-rule-preset-ja-engineering-paper": "^1.0.4",
     "textlint-rule-preset-ja-technical-writing": "^12.0.2",

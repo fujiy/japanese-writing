@@ -54,3 +54,6 @@ entries:
   - term: レンズ
     allowed_context: 光を屈折させて結像させる光学部品．
     rewrite_hint: 「視点」「観点」「分析方法」など．
+  - term: 被覆
+    allowed_context: 物体の表面を覆う物質．または，数学の用語．
+    rewrite_hint: 「表面」「カバー」など
